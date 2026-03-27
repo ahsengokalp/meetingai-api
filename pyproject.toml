@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "meetingai-api"
+version = "0.1.0"
+description = "Web dashboard and mobile API for MeetingAI"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "Flask>=3.1,<4",
+  "ldap3>=2.9,<3",
+  "meetingai-shared>=0.1.0",
+  "requests>=2.32,<3",
+]
+
+[project.scripts]
+meetingai-api = "meetingai_api.main:main"
+
+[tool.setuptools]
+packages = [
+  "meetingai_api",
+  "meetingai_api.auth",
+  "meetingai_api.clients",
+  "meetingai_api.routes",
+  "meetingai_api.services",
+]
+include-package-data = true
+
+[tool.setuptools.package-dir]
+"meetingai_api" = "."
+"meetingai_api.auth" = "auth"
+"meetingai_api.clients" = "clients"
+"meetingai_api.routes" = "routes"
+"meetingai_api.services" = "services"
+
+[tool.setuptools.package-data]
+meetingai_api = ["templates/*.html", "static/*.css", "static/*.js"]

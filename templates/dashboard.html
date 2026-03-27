@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meeting Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <section class="hero-main">
+          <div class="hero-topbar">
+            <div class="brand-lockup">
+              <p class="eyebrow">Meeting Intelligence</p>
+              <p class="brand-subline">Web paneli</p>
+            </div>
+            <div class="hero-actions">
+              <div class="user-badge">
+                <span class="user-label">Kullanici</span>
+                <strong>{{ current_user or "operator" }}</strong>
+              </div>
+              <form method="post" action="{{ url_for('auth.logout') }}">
+                <button class="button button-ghost" type="submit">
+                  <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M13.29 4.29a1 1 0 0 0 0 1.42L18.59 11H9a1 1 0 1 0 0 2h9.59l-5.3 5.29a1 1 0 1 0 1.42 1.42l7-7a1 1 0 0 0 0-1.42l-7-7a1 1 0 0 0-1.42 0ZM5 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3a1 1 0 1 0 0-2H5V7h3a1 1 0 0 0 0-2H5Z"/>
+                  </svg>
+                  <span>Cikis</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="hero-overview">
+            <div class="hero-title-row">
+              <span class="hero-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 3h9a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9h-3a2 2 0 0 1-2-2V5H6Zm7 .41V7h1.59L13 5.41ZM8 11a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H8Z"/>
+                </svg>
+              </span>
+              <div>
+                <h1>Panel</h1>
+                <p class="hero-copy">Kayit, transcript ve notlar tek ekranda.</p>
+              </div>
+            </div>
+
+            <div class="hero-summary-grid">
+              <article class="hero-summary-card">
+                <svg class="hero-summary-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3a4 4 0 0 1 4 4v5a4 4 0 1 1-8 0V7a4 4 0 0 1 4-4Zm6 9a1 1 0 1 1 2 0 8 8 0 0 1-7 7.94V22h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.06A8 8 0 0 1 4 12a1 1 0 1 1 2 0 6 6 0 1 0 12 0Z"/>
+                </svg>
+                <div>
+                  <span class="hero-summary-label">Durum</span>
+                  <strong>{{ state.status }}</strong>
+                </div>
+              </article>
+              <article class="hero-summary-card">
+                <svg class="hero-summary-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm6 1.5V9h4.5L13 4.5ZM8 12a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H8Z"/>
+                </svg>
+                <div>
+                  <span class="hero-summary-label">Transkript</span>
+                  <strong>{{ transcripts|length }}</strong>
+                </div>
+              </article>
+              <article class="hero-summary-card">
+                <svg class="hero-summary-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 3h9a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9h-3a2 2 0 0 1-2-2V5H6Zm7 .41V7h1.59L13 5.41ZM8 11a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H8Z"/>
+                </svg>
+                <div>
+                  <span class="hero-summary-label">Not</span>
+                  <strong>{{ notes|length }}</strong>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <aside class="status-card command-card">
+          <div class="status-card-head compact-status-head">
+            <div class="status-heading-group">
+              <span class="status-icon-shell" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 4a1 1 0 0 0-1 1v5.59l-2.7 2.7a1 1 0 1 0 1.4 1.42l3-3a1 1 0 0 0 .3-.71V7a1 1 0 0 0-1-1Z"/>
+                </svg>
+              </span>
+              <div>
+                <p class="status-label">Canli oturum</p>
+                <p class="status-heading">Durum</p>
+              </div>
+            </div>
+            <p id="recording-status" class="status-pill status-{{ state.status }}">{{ state.status }}</p>
+          </div>
+
+          <div class="status-mini-grid">
+            <article class="status-mini-item">
+              <span class="status-mini-label">Segment</span>
+              <strong>{{ state.segment_count }}</strong>
+            </article>
+            <article class="status-mini-item">
+              <span class="status-mini-label">Bekleyen</span>
+              <strong>{{ state.pending_refinements or 0 }}</strong>
+            </article>
+          </div>
+
+          <p id="recording-meta" class="status-meta status-summary">
+            {% if state.error %}
+            Hata: {{ state.error }}
+            {% elif state.pending_refinements and not state.is_recording %}
+            {{ state.pending_refinements }} segment iyilestiriliyor.
+            {% elif state.started_at %}
+            Basladi: {{ state.started_at }}
+            {% else %}
+            Yeni kayit icin hazir.
+            {% endif %}
+          </p>
+
+          <div class="status-detail-list">
+            <p id="recording-device" class="status-meta">
+              {% if state.input_device_name %}
+              Mikrofon: {{ state.input_device_name }}
+              {% else %}
+              Mikrofon: henuz secilmedi.
+              {% endif %}
+            </p>
+          </div>
+
+          <form class="device-form" method="post" action="{{ url_for('set_recording_device') }}">
+            <label>
+              <span>Mikrofon</span>
+              <select name="device" id="device-select">
+                <option value="" {% if state.preferred_input_device_index is none %}selected{% endif %}>Otomatik secim</option>
+                {% for device in input_devices %}
+                <option value="{{ device.index }}" {% if state.preferred_input_device_index == device.index %}selected{% endif %}>
+                  {{ device.label }}
+                </option>
+                {% endfor %}
+              </select>
+            </label>
+            <button class="button button-secondary" type="submit">
+              <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3a4 4 0 0 1 4 4v5a4 4 0 1 1-8 0V7a4 4 0 0 1 4-4Zm6 9a1 1 0 1 1 2 0 8 8 0 0 1-7 7.94V22h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.06A8 8 0 0 1 4 12a1 1 0 1 1 2 0 6 6 0 1 0 12 0Z"/>
+              </svg>
+              <span>Mikrofonu kullan</span>
+            </button>
+          </form>
+          {% if input_devices_error %}
+          <p class="error-text">{{ input_devices_error }}</p>
+          {% endif %}
+          {% if state.error %}
+          <p class="error-text">{{ state.error }}</p>
+          {% endif %}
+        </aside>
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <section class="flash-stack">
+            {% for category, message in messages %}
+              <div class="flash flash-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          </section>
+        {% endif %}
+      {% endwith %}
+
+      <nav class="section-nav" aria-label="Dashboard sections">
+        <a class="section-nav-link" href="#live-panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3a4 4 0 0 1 4 4v5a4 4 0 1 1-8 0V7a4 4 0 0 1 4-4Zm6 9a1 1 0 1 1 2 0 8 8 0 0 1-7 7.94V22h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.06A8 8 0 0 1 4 12a1 1 0 1 1 2 0 6 6 0 1 0 12 0Z"/>
+          </svg>
+          <span>Canli</span>
+        </a>
+        <a class="section-nav-link" href="#transcripts-panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm6 1.5V9h4.5L13 4.5ZM8 12a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H8Z"/>
+          </svg>
+          <span>Transkript</span>
+        </a>
+        <a class="section-nav-link" href="#notes-panel">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 3h9a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9h-3a2 2 0 0 1-2-2V5H6Zm7 .41V7h1.59L13 5.41ZM8 11a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H8Z"/>
+          </svg>
+          <span>Notlar</span>
+        </a>
+      </nav>
+
+      <main class="dashboard-grid">
+        <section id="live-panel" class="panel panel-live">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Live capture</p>
+              <h2>Canli transkript</h2>
+            </div>
+          </div>
+
+          <div class="live-control-card">
+            <form id="live-start-form" class="live-start-form" method="post" action="{{ url_for('start_recording') }}">
+              <label class="live-title-field">
+                <span>Meeting title</span>
+                <input
+                  type="text"
+                  name="meeting_title"
+                  placeholder="Haftalik operasyon toplantisi"
+                  {% if state.is_recording and state.meeting_title %}value="{{ state.meeting_title }}"{% endif %}
+                >
+              </label>
+            </form>
+            <div class="live-action-row">
+              <button id="start-button" class="button button-primary" type="submit" form="live-start-form">
+                <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5.14v13.72c0 .8.89 1.27 1.54.8l10.28-6.86a.97.97 0 0 0 0-1.6L9.54 4.34A.97.97 0 0 0 8 5.14Z"/>
+                </svg>
+                <span>Baslat</span>
+              </button>
+              <form class="live-stop-form" method="post" action="{{ url_for('stop_recording') }}">
+                <button id="stop-button" class="button button-secondary" type="submit">
+                  <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 5h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/>
+                  </svg>
+                  <span>Durdur</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="live-grid">
+            <article class="metric-card">
+              <p class="metric-label">Segments</p>
+              <p id="segment-count" class="metric-value">{{ state.segment_count }}</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Meeting title</p>
+              <p id="meeting-title" class="metric-value metric-file">{{ state.meeting_title or selected_transcript_title or "Not set" }}</p>
+            </article>
+            <article class="metric-card">
+              <p class="metric-label">Session</p>
+              <p id="session-name" class="metric-value metric-file">{{ state.session_name or "pending" }}</p>
+            </article>
+          </div>
+
+          <div class="live-text-card">
+            <div class="subhead">
+              <h3>Current text</h3>
+            </div>
+            <p id="current-text" class="current-text">
+              {{ state.current_text or "No transcript produced yet." }}
+            </p>
+          </div>
+
+          <div class="subhead">
+            <h3>Recent segments</h3>
+          </div>
+          <ul id="live-segments" class="segment-list">
+            {% for segment in state.segments %}
+              <li>
+                <span class="segment-time">
+                  {{ segment.start }} - {{ segment.end }}
+                  <span class="segment-phase segment-phase-{{ segment.status or 'final' }}">{{ segment.status or "final" }}</span>
+                </span>
+                <span class="segment-text">{{ segment.text }}</span>
+              </li>
+            {% else %}
+              <li class="empty-state">No live output yet.</li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section id="transcripts-panel" class="panel">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Transcript library</p>
+              <h2>Ham transkriptler</h2>
+            </div>
+          </div>
+
+          <form class="analyze-form" method="post" action="{{ url_for('analyze') }}">
+            <label>
+              <span>Transcript</span>
+              <select name="meeting_id">
+                {% for transcript in transcripts %}
+                  <option value="{{ transcript.id }}" {% if transcript.id == selected_transcript_id %}selected{% endif %}>
+                    {{ transcript.name }}
+                  </option>
+                {% endfor %}
+              </select>
+            </label>
+            <label>
+              <span>Meeting title / context</span>
+              <input type="text" name="title" value="{{ selected_transcript_title or '' }}" placeholder="Haftalik operasyon toplantisi">
+            </label>
+            <button class="button button-primary" type="submit">
+              <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h9a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9h-3a2 2 0 0 1-2-2V5H6Zm7 .41V7h1.59L13 5.41ZM8 11a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H8Z"/>
+              </svg>
+              <span>Not olustur</span>
+            </button>
+          </form>
+
+          <div class="list-card">
+            {% for transcript in transcripts %}
+              <div class="transcript-row {% if transcript.id == selected_transcript_id %}active{% endif %}">
+                <a
+                  class="list-item transcript-link {% if transcript.id == selected_transcript_id %}active{% endif %}"
+                  href="{{ url_for('dashboard', meeting=transcript.id) }}"
+                >
+                  <span class="list-title">{{ transcript.title or transcript.name }}</span>
+                  <span class="list-meta">{{ transcript.modified_at }} | {{ transcript.size }} bytes</span>
+                  <span class="list-preview">{{ transcript.preview or "Empty transcript." }}</span>
+                </a>
+                <form
+                  class="delete-form"
+                  method="post"
+                  action="{{ url_for('delete_transcript') }}"
+                  onsubmit="return confirm('Delete this transcript and its related files?');"
+                >
+                  <input type="hidden" name="meeting_id" value="{{ transcript.id }}">
+                  <button class="icon-button delete-button" type="submit" aria-label="Delete {{ transcript.name }}" title="Delete transcript bundle">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M9 3h6l1 2h4v2H4V5h4l1-2zm1 7h2v8h-2v-8zm4 0h2v8h-2v-8zM7 10h2v8H7v-8zm-1 10h12l1-12H5l1 12z"/>
+                    </svg>
+                  </button>
+                </form>
+              </div>
+            {% else %}
+              <div class="empty-box">No transcript file exists yet.</div>
+            {% endfor %}
+          </div>
+
+          <div class="subhead">
+            <h3>Selected transcript</h3>
+          </div>
+          <pre class="document-view">{{ selected_transcript_text or "Select a transcript to preview it here." }}</pre>
+        </section>
+
+        <section id="notes-panel" class="panel panel-note">
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Structured output</p>
+              <h2>Toplanti notlari</h2>
+            </div>
+          </div>
+
+          <div class="list-card note-list">
+            {% for note in notes %}
+              <a
+                class="list-item {% if note.id == selected_note_id %}active{% endif %}"
+                href="{{ url_for('dashboard', meeting=selected_transcript_id, note=note.id) }}"
+              >
+                <span class="list-title">{{ note.title }}</span>
+                <span class="list-meta">{{ note.modified_at }}</span>
+                <span class="list-preview">{{ note.summary or "No summary available." }}</span>
+              </a>
+            {% else %}
+              <div class="empty-box">
+                {% if selected_transcript_name %}
+                No meeting note is linked to this transcript yet.
+                {% else %}
+                No meeting note exists yet.
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if selected_note %}
+          <article class="note-detail">
+            <h3>{{ selected_note.title or ('Note ' ~ selected_note_id) }}</h3>
+            <p class="note-summary">{{ selected_note.summary or "No summary available." }}</p>
+
+            <div class="note-columns">
+              <section>
+                <h4>Decisions</h4>
+                <ul>
+                  {% for item in selected_note.decisions or [] %}
+                    <li>{{ item }}</li>
+                  {% else %}
+                    <li>No decisions captured.</li>
+                  {% endfor %}
+                </ul>
+              </section>
+              <section>
+                <h4>Risks</h4>
+                <ul>
+                  {% for item in selected_note.risks or [] %}
+                    <li>{{ item }}</li>
+                  {% else %}
+                    <li>No risks captured.</li>
+                  {% endfor %}
+                </ul>
+              </section>
+            </div>
+
+            <section>
+              <h4>Action items</h4>
+              <div class="action-grid">
+                {% for item in selected_note.action_items or [] %}
+                  <article class="action-card">
+                    <p class="action-task">{{ item.task or "Unnamed task" }}</p>
+                    <p class="action-meta">Owner: {{ item.owner or "unknown" }}</p>
+                    <p class="action-meta">Due: {{ item.due_date or "unknown" }}</p>
+                    <p class="action-meta">Priority: {{ item.priority or "unknown" }}</p>
+                  </article>
+                {% else %}
+                  <div class="empty-box">No action items captured.</div>
+                {% endfor %}
+              </div>
+            </section>
+
+            <section>
+              <h4>Open questions</h4>
+              <ul>
+                {% for item in selected_note.open_questions or [] %}
+                  <li>{{ item }}</li>
+                {% else %}
+                  <li>No open questions captured.</li>
+                {% endfor %}
+              </ul>
+            </section>
+
+            <section>
+              <h4>Tags</h4>
+              <div class="tag-row">
+                {% for tag in selected_note.tags or [] %}
+                  <span class="tag">{{ tag }}</span>
+                {% else %}
+                  <span class="tag muted">No tags</span>
+                {% endfor %}
+              </div>
+            </section>
+          </article>
+          {% else %}
+          <div class="empty-box tall">
+            {% if selected_transcript_id and not transcript_has_related_note %}
+            This transcript does not have a linked meeting note yet.
+            {% else %}
+            Select a meeting note to inspect its content.
+            {% endif %}
+          </div>
+          {% endif %}
+        </section>
+      </main>
+    </div>
+
+    <script id="dashboard-state" type="application/json">{{ state | tojson }}</script>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+  </body>
+</html>

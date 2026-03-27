@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meeting Intelligence | Giris</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #f7ede3;
+        --bg-deep: #f0decb;
+        --panel: rgba(255, 249, 243, 0.92);
+        --panel-strong: rgba(255, 252, 248, 0.98);
+        --line: rgba(177, 104, 41, 0.18);
+        --ink: #22201b;
+        --muted: #756558;
+        --accent: #ea7a24;
+        --accent-deep: #b95512;
+        --danger: #b1493f;
+        --shadow: 0 28px 60px rgba(123, 78, 36, 0.16);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Montserrat", "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top left, rgba(255, 196, 125, 0.55), transparent 32%),
+          radial-gradient(circle at bottom right, rgba(234, 122, 36, 0.18), transparent 28%),
+          linear-gradient(135deg, var(--bg) 0%, var(--bg-deep) 100%);
+      }
+
+      .page-shell {
+        min-height: 100vh;
+        padding: 24px;
+        display: grid;
+        place-items: center;
+      }
+
+      .auth-layout {
+        width: min(1040px, 100%);
+        display: grid;
+        grid-template-columns: minmax(0, 420px) minmax(0, 1fr);
+        gap: 0;
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid rgba(154, 93, 38, 0.12);
+        box-shadow: var(--shadow);
+        background: rgba(255, 247, 240, 0.78);
+        backdrop-filter: blur(16px);
+      }
+
+      .auth-panel {
+        padding: 36px;
+        background: var(--panel-strong);
+        display: flex;
+        align-items: center;
+      }
+
+      .auth-card {
+        width: 100%;
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.18em;
+        font-size: 0.74rem;
+        font-weight: 700;
+      }
+
+      .auth-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .auth-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: rgba(234, 122, 36, 0.1);
+        color: var(--accent-deep);
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+
+      .auth-pill svg,
+      .field-icon,
+      .submit-icon,
+      .feature-icon {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        fill: currentColor;
+      }
+
+      .auth-card h1 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 2.9rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
+      }
+
+      .auth-copy {
+        margin: 12px 0 24px;
+        color: var(--muted);
+        line-height: 1.65;
+      }
+
+      .flash-stack {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .flash {
+        padding: 14px 16px;
+        border-radius: 16px;
+        border: 1px solid rgba(177, 73, 63, 0.15);
+        background: rgba(177, 73, 63, 0.08);
+        color: var(--danger);
+        font-size: 0.94rem;
+      }
+
+      .login-form {
+        display: grid;
+        gap: 16px;
+      }
+
+      .field {
+        display: grid;
+        gap: 9px;
+      }
+
+      .field-label {
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+
+      .input-shell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 16px;
+        min-height: 58px;
+        border-radius: 18px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+      }
+
+      .input-shell:focus-within {
+        border-color: rgba(234, 122, 36, 0.42);
+        box-shadow: 0 0 0 4px rgba(234, 122, 36, 0.12);
+        transform: translateY(-1px);
+      }
+
+      .field-icon {
+        color: var(--accent);
+      }
+
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: var(--ink);
+        font: inherit;
+      }
+
+      input::placeholder {
+        color: #9b8a7c;
+      }
+
+      .submit-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 4px;
+        border: none;
+        border-radius: 18px;
+        min-height: 58px;
+        padding: 0 20px;
+        font: inherit;
+        font-weight: 800;
+        color: #fff8f2;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+        box-shadow: 0 18px 28px rgba(234, 122, 36, 0.28);
+        transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+      }
+
+      .submit-button:hover {
+        transform: translateY(-1px);
+        filter: saturate(1.05);
+      }
+
+      .auth-footer {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.6;
+      }
+
+      .auth-footer strong {
+        color: var(--accent-deep);
+      }
+
+      .hero-panel {
+        position: relative;
+        padding: 36px;
+        background:
+          radial-gradient(circle at 20% 18%, rgba(255, 208, 149, 0.92), transparent 22%),
+          radial-gradient(circle at 82% 20%, rgba(234, 122, 36, 0.18), transparent 18%),
+          linear-gradient(160deg, rgba(255, 250, 245, 0.92), rgba(246, 227, 206, 0.84));
+        isolation: isolate;
+        display: grid;
+        align-content: start;
+        gap: 24px;
+      }
+
+      .hero-panel::after {
+        content: "";
+        position: absolute;
+        inset: 20px 22px auto auto;
+        width: 150px;
+        height: 150px;
+        border-radius: 24px;
+        background: linear-gradient(145deg, rgba(255, 255, 255, 0.56), rgba(234, 122, 36, 0.12));
+        border: 1px solid rgba(234, 122, 36, 0.12);
+        transform: rotate(12deg);
+        z-index: -1;
+      }
+
+      .hero-header h2 {
+        margin: 0;
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        line-height: 0.96;
+        letter-spacing: -0.05em;
+      }
+
+      .hero-copy {
+        margin: 10px 0 0;
+        max-width: 26rem;
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      .feature-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .feature-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 16px;
+        border-radius: 20px;
+        background: rgba(255, 252, 248, 0.84);
+        border: 1px solid var(--line);
+      }
+
+      .feature-icon {
+        width: 18px;
+        height: 18px;
+        margin-top: 3px;
+        color: var(--accent);
+      }
+
+      .feature-title {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      .feature-text {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.6;
+      }
+
+      .hero-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 9px 12px;
+        border-radius: 999px;
+        background: rgba(255, 252, 248, 0.84);
+        border: 1px solid var(--line);
+        color: var(--accent-deep);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      @media (max-width: 920px) {
+        .page-shell {
+          padding: 16px;
+        }
+
+        .auth-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .auth-panel,
+        .hero-panel {
+          padding: 24px 20px;
+        }
+
+        .hero-panel {
+          order: 2;
+          gap: 16px;
+        }
+
+        .hero-panel::after {
+          display: none;
+        }
+
+        .hero-copy {
+          margin-top: 8px;
+          font-size: 0.94rem;
+        }
+
+        .feature-list {
+          gap: 10px;
+        }
+
+        .feature-card {
+          padding: 14px;
+          border-radius: 18px;
+        }
+
+        .hero-badges {
+          gap: 8px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .page-shell {
+          padding: 12px;
+        }
+
+        .auth-layout {
+          border-radius: 24px;
+        }
+
+        .auth-panel,
+        .hero-panel {
+          padding: 20px 16px;
+        }
+
+        .auth-copy {
+          margin-bottom: 20px;
+        }
+
+        .input-shell,
+        .submit-button {
+          min-height: 54px;
+        }
+
+        .feature-list,
+        .hero-badges {
+          display: none;
+        }
+
+        .hero-panel {
+          gap: 10px;
+        }
+
+        .hero-copy {
+          margin-top: 6px;
+          font-size: 0.9rem;
+          line-height: 1.55;
+        }
+
+        .feature-text {
+          font-size: 0.86rem;
+        }
+
+        .hero-badges,
+        .auth-meta {
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-shell">
+      <main class="auth-layout">
+        <section class="auth-panel">
+          <div class="auth-card">
+            <p class="eyebrow">Meeting Intelligence</p>
+            <div class="auth-meta">
+              <span class="auth-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 2a5 5 0 0 1 5 5v2h.5A2.5 2.5 0 0 1 20 11.5v7A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-7A2.5 2.5 0 0 1 6.5 9H7V7a5 5 0 0 1 5-5Zm3 7V7a3 3 0 0 0-6 0v2h6Zm-3 4a1.5 1.5 0 0 0-1 2.62V17a1 1 0 1 0 2 0v-1.38A1.5 1.5 0 0 0 12 13Z"/>
+                </svg>
+                LDAP
+              </span>
+              <span class="auth-pill">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 4h10l4 4v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm8 1.5V9h3.5L13 5.5ZM7 12a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2H7Zm0 4a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2H7Z"/>
+                </svg>
+                Internal
+              </span>
+            </div>
+            <h1>Giris yap</h1>
+            <p class="auth-copy">
+              Kayit, transcript ve notlara erismek icin kurumsal hesabinizla oturum acin.
+            </p>
+
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+              <div class="flash-stack">
+                {% for message in messages %}
+                <div class="flash">{{ message }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            {% endwith %}
+
+            <form class="login-form" method="post" action="{{ url_for('auth.login') }}">
+              <label class="field">
+                <span class="field-label">Kullanici adi</span>
+                <span class="input-shell">
+                  <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.06 0-8 2.02-8 5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1c0-2.98-3.94-5-8-5Z"/>
+                  </svg>
+                  <input type="text" name="username" placeholder="ornek.kullanici" autocomplete="username" required>
+                </span>
+              </label>
+
+              <label class="field">
+                <span class="field-label">Sifre</span>
+                <span class="input-shell">
+                  <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2a5 5 0 0 1 5 5v2h.5A2.5 2.5 0 0 1 20 11.5v7A2.5 2.5 0 0 1 17.5 21h-11A2.5 2.5 0 0 1 4 18.5v-7A2.5 2.5 0 0 1 6.5 9H7V7a5 5 0 0 1 5-5Zm3 7V7a3 3 0 0 0-6 0v2h6Zm-3 4a1.5 1.5 0 0 0-1 2.62V17a1 1 0 1 0 2 0v-1.38A1.5 1.5 0 0 0 12 13Z"/>
+                  </svg>
+                  <input type="password" name="password" placeholder="Sifrenizi girin" autocomplete="current-password" required>
+                </span>
+              </label>
+
+              <button class="submit-button" type="submit">
+                <svg class="submit-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M13.29 4.29a1 1 0 0 0 0 1.42L18.59 11H4a1 1 0 1 0 0 2h14.59l-5.3 5.29a1 1 0 1 0 1.42 1.42l7-7a1 1 0 0 0 0-1.42l-7-7a1 1 0 0 0-1.42 0Z"/>
+                </svg>
+                <span>Giris yap</span>
+              </button>
+            </form>
+
+            <p class="auth-footer">
+              Giris bilgileri sirket LDAP sunucusunda dogrulanir. Erisim sorunu yasarsaniz <strong>BT ekibi</strong> ile
+              iletisime gecin.
+            </p>
+          </div>
+        </section>
+
+        <section class="hero-panel">
+          <div class="hero-header">
+            <p class="eyebrow">Dashboard</p>
+            <h2>Kaydet. Donustur. Ozetle.</h2>
+            <p class="hero-copy">
+              Canli transcript, arsiv ve yapilandirilmis toplanti notlari tek panelde.
+            </p>
+          </div>
+
+          <div class="feature-list">
+            <article class="feature-card">
+              <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 3a4 4 0 0 1 4 4v5a4 4 0 1 1-8 0V7a4 4 0 0 1 4-4Zm6 9a1 1 0 1 1 2 0 8 8 0 0 1-7 7.94V22h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.06A8 8 0 0 1 4 12a1 1 0 1 1 2 0 6 6 0 1 0 12 0Z"/>
+              </svg>
+              <div>
+                <span class="feature-title">Canli kayit</span>
+                <p class="feature-text">Konusma bazli segmentleme ile toplanti akisina hizli erisim.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 3h10a2 2 0 0 1 2 2v5.5a6.5 6.5 0 1 1-3.26 5.63H8a3 3 0 0 1-3-3V5a2 2 0 0 1 2-2Zm1 2v8a1 1 0 0 0 1 1h6.6A6.53 6.53 0 0 1 19 12.85V5H8Zm10.5 9a4.5 4.5 0 1 0 .001 9.001A4.5 4.5 0 0 0 18.5 14Zm-1 2.25a1 1 0 0 1 1 1v1.59l1.12 1.12a1 1 0 0 1-1.42 1.42l-1.41-1.42a1 1 0 0 1-.29-.7V17.25a1 1 0 0 1 1-1Z"/>
+              </svg>
+              <div>
+                <span class="feature-title">Arsiv</span>
+                <p class="feature-text">Toplanti transcriptleri ve notlari geriye donuk incelenebilir.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <svg class="feature-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 3h9a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3Zm0 2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9h-3a2 2 0 0 1-2-2V5H6Zm7 .41V7h1.59L13 5.41ZM8 11a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H8Zm0 4a1 1 0 1 0 0 2h4a1 1 0 1 0 0-2H8Z"/>
+              </svg>
+              <div>
+                <span class="feature-title">AI notlari</span>
+                <p class="feature-text">Kararlar, aksiyonlar ve riskler tek cikti icinde toplanir.</p>
+              </div>
+            </article>
+          </div>
+
+          <div class="hero-badges">
+            <span class="hero-badge">LDAP</span>
+            <span class="hero-badge">Whisper</span>
+            <span class="hero-badge">Ollama</span>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
