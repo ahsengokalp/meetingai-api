@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from meetingai_api.clients.worker_client import WorkerClient
-from meetingai_shared.config import NOTE_WORKER_BASE_URL
+from meetingai_shared.config import NOTE_ANALYZE_REQUEST_TIMEOUT, NOTE_WORKER_BASE_URL
 
 
 class NoteWorkerClient(WorkerClient):
@@ -28,7 +28,7 @@ class NoteWorkerClient(WorkerClient):
                 "requested_by": requested_by,
                 "trigger_source": trigger_source,
             },
-            timeout=600,
+            timeout=NOTE_ANALYZE_REQUEST_TIMEOUT,
         )
 
     def resend_note_mail(
